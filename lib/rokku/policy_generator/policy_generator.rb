@@ -5,7 +5,6 @@ require 'hanami/action/session'
 
 module Hanami
   module Rokku
-
     private
 # The generate_policy method creates the policy file for specified
 # application and controller. By default all actions to check against
@@ -52,7 +51,6 @@ def generate_policy(app_name, controller_name)
       end
     end
     TXT
-
 
   FileUtils.mkdir_p "lib/#{app_name}/policies" unless File.directory?("lib/#{app_name}/policies")
   unless File.file?("lib/#{app_name}/policies/#{controller}Policy.rb")

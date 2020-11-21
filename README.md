@@ -37,7 +37,7 @@ end
 ## Usage
 
 ```ruby
-tachiban -n mightyPoster -p post
+rokku -n mightyPoster -p post
 ```
 The above CLI command will generate a policy file for the application mightyPoster (not the project) and the controller post. The file will be generated as `myProject/lib/mightyPoster/policies/PostPolicy.rb`
 

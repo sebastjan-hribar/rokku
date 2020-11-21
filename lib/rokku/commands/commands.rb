@@ -5,7 +5,7 @@ require_relative "../policy_generator/policy_generator.rb"
 options = {}
 optparse = OptionParser.new do |opts|
   opts.banner = "\nHanami authorization policy generator
-Usage: tachiban -n myapp -p user
+Usage: rokku -n myapp -p user
 Flags:
 \n"
 
