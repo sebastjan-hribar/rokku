@@ -1,5 +1,12 @@
 require 'fileutils'
 
+require 'hanami/controller'
+require 'hanami/action/session'
+
+module Hanami
+  module Rokku
+
+    private
 # The generate_policy method creates the policy file for specified
 # application and controller. By default all actions to check against
 # are commented out.
@@ -52,4 +59,6 @@ def generate_policy(app_name, controller_name)
     File.open("lib/#{app_name}/policies/#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
   end
   puts("Generated policy: lib/#{app_name}/policies/#{controller}Policy.rb") if File.file?("lib/#{app_name}/policies/#{controller}Policy.rb")
+end
+  end
 end

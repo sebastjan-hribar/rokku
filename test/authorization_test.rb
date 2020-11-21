@@ -1,8 +1,6 @@
 require 'test_helper'
 require_relative 'testApp/lib/firstApp/policies/TaskPolicy.rb'
-require_relative '../lib/tachiban/policy_generator/policy_generator.rb'
-
-
+require_relative '../lib/rokku/policy_generator/policy_generator.rb'
 
 module Web
   module Controllers
@@ -17,9 +15,7 @@ module Web
   end
 end
 
-
 describe "Authorization" do
-
   before do
     @application_name = "firstApp"
     @action = Web::Controllers::Task::New.new
@@ -29,7 +25,7 @@ describe "Authorization" do
 
   describe "with authorized user" do
     before do
-      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"),
+      @user = User.new(id: 1, name: "Tester", hashed_pass: "123",
       role: "level_one_user")
       @role = @user.role
     end
@@ -43,10 +39,9 @@ describe "Authorization" do
     end
   end
 
-
   describe "with unauthorized user" do
     before do
-      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"), role: "guest_user")
+      @user = User.new(id: 1, name: "Tester", hashed_pass: "123", role: "guest_user")
     end
 
     after do
@@ -57,7 +52,6 @@ describe "Authorization" do
       refute authorized?(@controller_name, @role, @action_name) == true, "User is not authorized"
     end
   end
-
 
   describe "policy file creation" do
     before do
@@ -70,7 +64,6 @@ describe "Authorization" do
       end
     end
 
-
     it "generates policy" do
       Dir.chdir('test/testApp') do
         generate_policy(@application_name, @new_controller)
@@ -78,9 +71,6 @@ describe "Authorization" do
         assert File.file?("lib/#{@application_name}/policies/#{@new_controller}Policy.rb"), "The file lib/#{@application_name}/policies/#{@new_controller}Policy.rb is generated"
         assert File.readlines(generated_policy_string).grep(/authorized_roles_for_new/).size > 0, "The file has content authorized_roles_for_new."
       end
-
     end
   end
-
-
 end
