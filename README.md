@@ -4,7 +4,7 @@
 
 Rokku (ロック - lock) offers authorization for [Hanami web applications](http://hanamirb.org/).
 
-Authorization was setup as inspired by [this blog post](http://billpatrianakos.me/blog/2013/10/22/authorize-users-based-on-roles-and-permissions-without-a-gem/). It support the generation of policy files for each controller where authorized roles are specified for each action.
+Authorization was setup as inspired by [this blog post](http://billpatrianakos.me/blog/2013/10/22/authorize-users-based-on-roles-and-permissions-without-a-gem/). It supports the generation of policy files for each controller where authorized roles are specified for each action.
 
 
 ## Installation
@@ -41,11 +41,11 @@ rokku -n mightyPoster -p post
 ```
 The above CLI command will generate a policy file for the application mightyPoster (not the project) and the controller post. The file will be generated as `myProject/lib/mightyPoster/policies/PostPolicy.rb`
 
-Each application would have its own `app/policies` folders.
+Each application will have its own `app/policies` folders.
 
 **The command must be run in the project root folder.**
 
-Once the file is generated the authorized roles variables in the initialize block for required actions need to be uncommneted and supplied with specific roles.
+Once the file is generated the authorized roles variables in the initialize block for required actions need to be uncommented and supplied with specific roles.
 
 Then we can check if a user is authorized:
 
@@ -64,7 +64,7 @@ authorized?(controller, role, action)
 
 #### 0.5.0
 
-Move from Tachiban`
+Move from Tachiban
 
 
 ## Development
