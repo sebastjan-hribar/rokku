@@ -7,3 +7,37 @@ class User < Hanami::Entity
     attribute :role,                    Types::String
   end
 end
+
+class Task < Hanami::Entity
+  attributes do
+    attribute :id,                      Types::Int
+    attribute :content,                 Types::String
+    attribute :author_id,               Types::Int
+  end
+end
+
+module Web
+  module Controllers
+    class Task
+      class New
+        include Hanami::Action
+        def controller_name
+          self.class.name
+        end
+      end
+    end
+  end
+end
+
+module Web
+  module Controllers
+    class Task
+      class Destroy
+        include Hanami::Action
+        def controller_name
+          self.class.name
+        end
+      end
+    end
+  end
+end

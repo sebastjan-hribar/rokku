@@ -15,6 +15,10 @@ module Hanami
     def authorized?(controller, role, action)
       Object.const_get(controller.downcase.capitalize + "Policy").new(role).send("#{action.downcase}?")
     end
+
+    def is_author?(object_id, user_id )
+      object_id == user_id
+    end
   end
 end
 
