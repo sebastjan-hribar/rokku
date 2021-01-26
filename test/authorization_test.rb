@@ -50,23 +50,25 @@ describe 'Authorization' do
       @visitor_user_role = @visitor_user.role
       @task = Task.new(id: 1, content: 'Take out trash.', author_id: 1)
 
-      @action = Web::Controllers::Task::Destroy.new
-      @controller_name = @action.controller_name.split("::")[2]
-      @action_name = @action.controller_name.split("::")[3]
+      action = Web::Controllers::Task::Destroy.new
+      @controller_name = action.controller_name.split("::")[2]
+      @action_name = action.controller_name.split("::")[3]
     end
 
     after do
-      @author_user = nil
-      @visitor_user = nil
-      @task = nil
+      author_user = nil
+      visitor_user = nil
+      task = nil
     end
 
     it 'authorizes the task author' do
-      assert authorized?(@controller_name, @author_user_role, @action_name) == true && is_author?(@task.id, @author_user.id), 'User is authorized'
+      @user = @author_user
+      assert authorized?(@controller_name, @author_user_role, @action_name) == true && is_author?(@task), 'User is authorized'
     end
 
     it 'it blocks non-author user' do
-      refute authorized?(@controller_name, @author_user_role, @action_name) == true && is_author?(@task.id, @visitor_user.id), 'User is not authorized'
+      @user = @visitor_user
+      refute authorized?(@controller_name, @author_user_role, @action_name) == true && is_author?(@task), 'User is not authorized'
     end
   end
 
