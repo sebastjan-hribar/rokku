@@ -36,6 +36,12 @@ end
 
 ## Usage
 
+#### Note
+The current setup of params for both authorizations below needs further optimization.
+
+
+### Role based authorization
+
 ```ruby
 rokku -n mightyPoster -p post
 ```
@@ -46,25 +52,39 @@ Each application will have its own `app/policies` folders.
 **The command must be run in the project root folder.**
 
 Once the file is generated, the authorized roles variables in the initialize block for required actions need to be uncommented and supplied with specific roles.
+For example:
+
+```ruby
+# @authorized_roles_for_show = []
+# @authorized_roles_for_index = []
+# @authorized_roles_for_edit = []
+@authorized_roles_for_update = ['admin']
+```
 
 Then we can check if a user is authorized:
 
 ```ruby
-authorized?(controller, role, action)
+authorized?("post", "admin", "update")
 ```
 
+### Author authorization
+We can also check if the current user is author of another entity and as such should be the only one allowed to perform certain activities.
+For this to work, the current user must be stored in the `@user` variable.
 
-### ToDo
-
-- Add support for author/owner authorizations.
-- Add generators for adding authorization rules to existing policies.
+`is_author?(task)`
 
 
 ### Changelog
 
+#### 0.6.0
+
+* Author authorization
+* Readme update
+
+
 #### 0.5.0
 
-Move from Tachiban
+* Move from Tachiban
 
 
 ## Development
