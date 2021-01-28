@@ -12,7 +12,8 @@ module Hanami
     #
     # Example: redirect_to "/" unless authorized?("post", "admin", "create")
 
-    def authorized?(controller, role, action)
+    def authorized?(controller, action)
+      role = @user.role
       Object.const_get(controller.downcase.capitalize + "Policy").new(role).send("#{action.downcase}?")
     end
 

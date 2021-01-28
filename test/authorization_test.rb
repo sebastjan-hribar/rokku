@@ -22,7 +22,7 @@ describe 'Authorization' do
     end
 
     it 'authorizes the user' do
-      assert authorized?(@controller_name, @role, @action_name), 'User is authorized'
+      assert authorized?(@controller_name, @action_name), 'User is authorized'
     end
   end
 
@@ -36,7 +36,7 @@ describe 'Authorization' do
     end
 
     it 'doesnt authorize the user' do
-      refute authorized?(@controller_name, @role, @action_name), 'User is not authorized'
+      refute authorized?(@controller_name, @action_name), 'User is not authorized'
     end
   end
 
@@ -63,12 +63,12 @@ describe 'Authorization' do
 
     it 'authorizes the task author' do
       @user = @author_user
-      assert authorized?(@controller_name, @author_user_role, @action_name) && is_author?(@task), 'User is authorized'
+      assert authorized?(@controller_name, @action_name) && is_author?(@task), 'User is authorized'
     end
 
     it 'it blocks non-author user' do
       @user = @visitor_user
-      refute authorized?(@controller_name, @author_user_role, @action_name) && is_author?(@task), 'User is not authorized'
+      refute authorized?(@controller_name, @action_name) && is_author?(@task), 'User is not authorized'
     end
   end
 
