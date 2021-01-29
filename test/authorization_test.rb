@@ -40,38 +40,6 @@ describe 'Authorization' do
     end
   end
 
-  describe 'with author check' do
-    before do
-      @author_user = User.new(id: 1, name: 'Tester', hashed_pass: '123',
-                              role: 'level_one_user')
-      @author_user_role = @author_user.role
-      @visitor_user = User.new(id: 2, name: 'Visitor', hashed_pass: '456',
-                               role: 'level_one_user')
-      @visitor_user_role = @visitor_user.role
-      @task = Task.new(id: 1, content: 'Take out trash.', author_id: 1)
-
-      action = Web::Controllers::Task::Destroy.new
-      @controller_name = action.controller_name.split("::")[2]
-      @action_name = action.controller_name.split("::")[3]
-    end
-
-    after do
-      author_user = nil
-      visitor_user = nil
-      task = nil
-    end
-
-    it 'authorizes the task author' do
-      @user = @author_user
-      assert authorized?(@controller_name, @action_name) && is_author?(@task), 'User is authorized'
-    end
-
-    it 'it blocks non-author user' do
-      @user = @visitor_user
-      refute authorized?(@controller_name, @action_name) && is_author?(@task), 'User is not authorized'
-    end
-  end
-
   describe 'policy file creation' do
     before do
       @new_controller = 'Post'

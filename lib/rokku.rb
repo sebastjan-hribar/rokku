@@ -17,9 +17,6 @@ module Hanami
       Object.const_get(controller.downcase.capitalize + "Policy").new(role).send("#{action.downcase}?")
     end
 
-    def is_author?(object)
-      object.id == @user.id
-    end
   end
 end
 

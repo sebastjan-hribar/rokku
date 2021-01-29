@@ -36,11 +36,10 @@ end
 
 ## Usage
 
-#### Note
-The current setup of params for both authorizations below needs further optimization.
-
-
 ### Role based authorization
+
+#### Prerequisites
+The current user must be stored in the `@user` variable.
 
 ```ruby
 rokku -n mightyPoster -p post
@@ -64,23 +63,15 @@ For example:
 Then we can check if a user is authorized:
 
 ```ruby
-authorized?("post", "admin", "update")
+authorized?("post", "update")
 ```
-
-### Author authorization
-We can also check if the current user is author of another entity and as such should be the only one allowed to perform certain activities.
-For this to work, the current user must be stored in the `@user` variable.
-
-`is_author?(task)`
-
 
 ### Changelog
 
-#### 0.6.0
+#### 0.5.1
 
-* Author authorization
 * Readme update
-
+* Refactored tests
 
 #### 0.5.0
 
