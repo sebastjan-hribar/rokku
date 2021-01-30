@@ -10,11 +10,13 @@ module Hanami
     # and permission to access the action. It returns true or false and
     # provides the basis for further actions in either case.
     #
-    # Example: redirect_to "/" unless authorized?("PostController", "admin", "create")
+    # Example: redirect_to "/" unless authorized?("post", "admin", "create")
 
-    def authorized?(controller, role, action)
+    def authorized?(controller, action)
+      role = @user.role
       Object.const_get(controller.downcase.capitalize + "Policy").new(role).send("#{action.downcase}?")
     end
+
   end
 end
 

@@ -6,13 +6,13 @@ class TaskPolicy
     # Uncomment the required roles and add the
     # appropriate user role to the @authorized_roles* array.
 
-    @authorized_roles_for_new = ["level_one_user"]
+    @authorized_roles_for_new = ['level_one_user']
     # @authorized_roles_for_create = []
     # @authorized_roles_for_show = []
     # @authorized_roles_for_index = []
     # @authorized_roles_for_edit = []
     # @authorized_roles_for_update = []
-    # @authorized_roles_for_destroy = []
+    @authorized_roles_for_destroy = ['level_one_user']
   end
 
   def new?
