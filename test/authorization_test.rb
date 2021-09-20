@@ -10,11 +10,27 @@ describe 'Authorization' do
     @action_name = @action.controller_name.split("::")[3]
   end
 
-  describe 'with authorized user' do
+  describe 'with authorized user and one role as a string' do
     before do
       @user = User.new(id: 1, name: 'Tester', hashed_pass: '123',
-      role: 'level_one_user')
-      @role = @user.role
+                       roles: 'level_one_user')
+      @roles = @user.roles
+    end
+
+    after do
+      @user = nil
+    end
+
+    it 'authorizes the user' do
+      assert authorized?(@controller_name, @action_name), 'User is authorized'
+    end
+  end
+
+  describe 'with authorized user and roles as an array of roles' do
+    before do
+      @user = User.new(id: 1, name: 'Tester', hashed_pass: '123',
+                       roles: ['level_one_user', 'level_two_user'])
+      @roles = @user.roles
     end
 
     after do
@@ -28,7 +44,7 @@ describe 'Authorization' do
 
   describe 'with unauthorized user' do
     before do
-      @user = User.new(id: 1, name: 'Tester', hashed_pass: '123', role: 'guest_user')
+      @user = User.new(id: 1, name: 'Tester', hashed_pass: '123', roles: 'guest_user')
     end
 
     after do

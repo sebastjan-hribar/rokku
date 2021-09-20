@@ -1,6 +1,6 @@
 # Rokku
 
-[![Join the chat at https://gitter.im/sebastjan-hribar/rokku](https://badges.gitter.im/sebastjan-hribar/rokku.svg)](https://gitter.im/sebastjan-hribar/rokku?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Gem Version](https://badge.fury.io/rb/rokku.svg)](https://badge.fury.io/rb/rokku) [![Build Status](https://travis-ci.org/sebastjan-hribar/rokku.svg?branch=master)](https://travis-ci.org/sebastjan-hribar/rokku)
+[![Join the chat at https://gitter.im/sebastjan-hribar/rokku](https://badges.gitter.im/sebastjan-hribar/rokku.svg)](https://gitter.im/sebastjan-hribar/rokku?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Gem Version](https://badge.fury.io/rb/rokku.svg)](https://badge.fury.io/rb/rokku)
 
 Rokku (ロック - lock) offers authorization for [Hanami web applications](http://hanamirb.org/).
 
@@ -39,7 +39,8 @@ end
 ### Role based authorization
 
 #### Prerequisites
-The current user must be stored in the `@user` variable.
+The current user must be stored in the `@user` variable and must have the attribute of `roles`. Rokku supports `roles`both as a type of `Array` and `String`.
+For example, the `@user.roles` could either be a simple string like 'admin' or an array of roles like `['level_1', 'level_2', 'level_3']`.
 
 ```ruby
 rokku -n mightyPoster -p post
@@ -60,13 +61,20 @@ For example:
 @authorized_roles_for_update = ['admin']
 ```
 
-Then we can check if a user is authorized:
+Then we can check if a user is authorized for the `Post` controller and `Update`action.
 
 ```ruby
 authorized?("post", "update")
 ```
 
 ### Changelog
+
+#### 0.6.0
+
+* Change to accept a string or an array as roles.
+* Refactored tests.
+* Added `commands.rb`to `bin/rokku`.
+* Small style changes.
 
 #### 0.5.1
 
