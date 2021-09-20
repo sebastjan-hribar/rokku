@@ -1,2 +1,4 @@
 #!/usr/bin/env ruby
 require_relative "../lib/rokku/commands/commands.rb"
+
+commands.rb
