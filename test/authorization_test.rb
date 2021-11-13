@@ -1,6 +1,7 @@
 require 'test_helper'
+require_relative '../lib/rokku/commands/commands.rb'
 require_relative 'testApp/lib/firstApp/policies/TaskPolicy.rb'
-require_relative '../lib/rokku/policy_generator/policy_generator.rb'
+include Commands
 
 describe 'Authorization' do
   before do
@@ -69,7 +70,7 @@ describe 'Authorization' do
 
     it 'generates policy' do
       Dir.chdir('test/testApp') do
-        generate_policy(@application_name, @new_controller)
+        Commands.generate_policy(@application_name, @new_controller)
         generated_policy_string = "lib/#{@application_name}/policies/#{@new_controller}Policy.rb"
         assert File.file?("lib/#{@application_name}/policies/#{@new_controller}Policy.rb"), "The file lib/#{@application_name}/policies/#{@new_controller}Policy.rb is generated"
         assert File.readlines(generated_policy_string).grep(/authorized_roles_for_new/).size > 0, 'The file has content authorized_roles_for_new.'
