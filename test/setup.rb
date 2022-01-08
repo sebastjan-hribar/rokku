@@ -41,3 +41,16 @@ module Web
     end
   end
 end
+
+module Admin
+  module Controllers
+    class Task
+      class New
+        include Hanami::Action
+        def controller_name
+          self.class.name
+        end
+      end
+    end
+  end
+end

@@ -12,7 +12,7 @@ module Hanami
     #
     # Example: redirect_to "/" unless authorized?("post", create")
 
-    def authorized?(controller, action)
+    def authorized?(application, controller, action)
       input_roles = @user.roles
       roles = []
       if input_roles.class == String
@@ -20,7 +20,7 @@ module Hanami
       else
         roles = input_roles
       end
-      Object.const_get(controller.downcase.capitalize + "Policy").new(roles).send("#{action.downcase}?")
+      Object.const_get("#{application}::#{controller.downcase.capitalize}Policy").new(roles).send("#{action.downcase}?")
     end
   end
 end
