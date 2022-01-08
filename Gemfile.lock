@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rokku (0.6.2)
+    rokku (0.7.0)
       hanami-controller (~> 1.0)
       hanami-router (~> 1.0)
 

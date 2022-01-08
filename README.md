@@ -39,7 +39,7 @@ end
 ### Role based authorization
 
 #### Prerequisites
-The current user must be stored in the `@user` variable and must have the attribute of `roles`. Rokku supports `roles`both as a type of `Array` and `String`.
+The current user must be stored in the `@user` variable and must have the attribute of `roles`. Rokku supports `roles` both as a type of `Array` and `String`.
 For example, the `@user.roles` could either be a simple string like 'admin' or an array of roles like `['level_1', 'level_2', 'level_3']`.
 
 ```ruby
@@ -61,13 +61,21 @@ For example:
 @authorized_roles_for_update = ['admin']
 ```
 
-Then we can check if a user is authorized for the `Post` controller and `Update`action.
+Then we can check if a user is authorized for the `mightyPoster` application, `Post` controller and `Update`action.
 
 ```ruby
-authorized?("post", "update")
+authorized?("mightyposter", "post", "update")
 ```
 
+A complete example of using Rokku in a Hanami 1.3 applications is available [here](https://sebastjan-hribar.github.io/programming/2022/01/08/rokku-with-hanami.html).
+
+
 ### Changelog
+
+#### 0.7.0
+
+* Policies are now scoped under application module so it is possible to have two `Dashboard` policies for two different applications.
+* Readme update.
 
 #### 0.6.0
 
