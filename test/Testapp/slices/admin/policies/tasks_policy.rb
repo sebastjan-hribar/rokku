@@ -1,11 +1,13 @@
-module Web
-  class TaskPolicy
-    def initialize(roles)
-      @user_roles = roles
+#test/testApp/app/slices/admin/policies/TaskPolicy.rb
+
+module Admin
+  class TasksPolicy
+    def initialize(user_roles)
+      @user_roles = Array(user_roles)
 
       # Uncomment the required roles and add the
       # appropriate user role to the @authorized_roles* array.
-      @authorized_roles_for_new = ['level_one_user']
+      @authorized_roles_for_new = ['level_three_user']
       @authorized_roles_for_create = []
       @authorized_roles_for_show = []
       @authorized_roles_for_index = []

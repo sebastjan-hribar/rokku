@@ -1,40 +1,41 @@
-class User < Hanami::Entity
-  attributes do
-    attribute :id,                       Types::Int
-    attribute :name,                     Types::String
-    attribute :hashed_pass,              Types::String
-    attribute :password_reset_sent_at,   Types::Time
-    attribute :roles,                    Types::Array
+class User
+  attr_accessor :id, :name, :hashed_pass, :password_reset_sent_at, :roles
+
+  def initialize(attributes = {})
+    @id = attributes[:id]
+    @name = attributes[:name]
+    @hashed_pass = attributes[:hashed_pass]
+    @password_reset_sent_at = attributes[:password_reset_sent_at]
+    @roles = attributes[:roles]
   end
 end
 
-class Task < Hanami::Entity
-  attributes do
-    attribute :id,                      Types::Int
-    attribute :content,                 Types::String
-    attribute :author_id,               Types::Int
+class Task
+  attr_accessor :id, :content, :author_id
+  
+  def initialize(attributes = {})
+    @id = attributes[:id]
+    @content = attributes[:content]
+    @author_id = attributes[:author_id]
   end
 end
 
-module Web
-  module Controllers
-    class Task
+module Testapp
+  module Actions
+    class Tasks
+      
       class New
-        include Hanami::Action
-        def controller_name
+        include Hanami::Rokku
+
+        def action_name
           self.class.name
         end
       end
-    end
-  end
-end
 
-module Web
-  module Controllers
-    class Task
       class Destroy
-        include Hanami::Action
-        def controller_name
+        include Hanami::Rokku
+
+        def action_name
           self.class.name
         end
       end
@@ -43,11 +44,12 @@ module Web
 end
 
 module Admin
-  module Controllers
-    class Task
+  module Actions
+    class Tasks
       class New
-        include Hanami::Action
-        def controller_name
+        include Hanami::Rokku
+
+        def action_name
           self.class.name
         end
       end
