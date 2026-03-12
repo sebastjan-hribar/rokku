@@ -11,8 +11,8 @@ module Hanami
     #
     # Example: redirect_to "/" unless authorized?("testapp", "posts", create")
 
-    def authorized?(application, resource, action)
-      input_roles = @user.roles
+    def authorized?(application, resource, action, user)
+      input_roles = user.roles
       roles = []
       if input_roles.class == String
         roles << input_roles
