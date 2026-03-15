@@ -6,8 +6,10 @@ Rokku (ロック - lock) offers authorization for [Hanami web applications](http
 
 Authorization was setup as inspired by [this blog post](http://billpatrianakos.me/blog/2013/10/22/authorize-users-based-on-roles-and-permissions-without-a-gem/). It supports the generation of policy files for each controller where authorized roles are specified for each action.
 
+**Note:** For Hanami 1.3 support, see the [0.7.0 branch](https://github.com/sebastjan-hribar/rokku/tree/0.7.0) or install Rokku 0.7.0.
 
-## Installation
+
+## 1. Installation
 
  Add this line to your application's Gemfile:
 
@@ -24,34 +26,58 @@ Or install it yourself as:
     $ gem install rokku
 
 
-Rokku is already setup to be included by your Hanami application:
+Rokku 2.0 needs to be included in the action:
 
 ```ruby
-::Hanami::Controller.configure do
-  prepare do
+# auto_register: false
+# frozen_string_literal: true
+
+require "hanami/action"
+require "dry/monads"
+require "rokku"
+
+module MyApplication
+  class Action < Hanami::Action
+    # Provide `Success` and `Failure` for pattern matching on operation results
+    include Dry::Monads[:result]
     include Hanami::Rokku
+
+    handle_exception "ROM::TupleCountMismatchError" => :handle_not_found
+
+    private
+
+    def handle_not_found(request, response, exception)
+      response.status = 404
+      response.format = :html
+      response.body = "Not found"
+    end
   end
 end
 ```
 
-## Usage
+## 2. Usage
 
-### Role based authorization
+### 2.1 Role based authorization
 
-#### Prerequisites
-The current user must be stored in the `@user` variable and must have the attribute of `roles`. Rokku supports `roles` both as a type of `Array` and `String`.
-For example, the `@user.roles` could either be a simple string like 'admin' or an array of roles like `['level_1', 'level_2', 'level_3']`.
+#### 2.1.1 Prerequisites
+Prior to authorizing the user, retrieve the entity from the database and assign it to a variable `user` so it can be passed to the `authorized?` method. Rokku supports `roles` both as a type of `Array` and `String`.
+For example, the `user.roles` could either be a simple string like 'admin' or an array of roles like `['level_1', 'level_2', 'level_3']`.
+
+### 2.2 Policy creation
+Rokku supports policy creation for either the main application or for a specific slice. The first are created in the `app/policies` folder and the latter in the `slices/'slice name'/policies`. See the two command examples below.
 
 ```ruby
-rokku -n mightyPoster -p post
+rokku -p task -a myapp #=> app/policies/task_policy.rb
 ```
-The above CLI command will generate a policy file for the application mightyPoster (not the project) and the controller post. The file will be generated as `myProject/lib/mightyPoster/policies/PostPolicy.rb`
 
-Each application will have its own `app/policies` folders.
+```ruby
+rokku -p task -s admin #=> app/slices/admin/policies/task_policy.rb
+```
 
 **The command must be run in the project root folder.**
 
 Once the file is generated, the authorized roles variables in the initialize block for required actions need to be uncommented and supplied with specific roles.
+
 For example:
 
 ```ruby
@@ -67,10 +93,19 @@ Then we can check if a user is authorized for the `mightyPoster` application, `P
 authorized?("mightyposter", "post", "update")
 ```
 
-A complete example of using Rokku in a Hanami 1.3 applications is available [here](https://sebastjan-hribar.github.io/programming/2022/01/08/rokku-with-hanami.html).
-
 
 ### Changelog
+
+#### 2.0.0
+
+**Breaking Changes:**
+- Supports Hanami ~> 2.0 applications only.
+- Application policies are now created in `app/policies`.
+- Slice policies are now created in `slices/my_slice/policies`.
+- Rokku must be explicitly included in the base action: `include Hanami::Rokku`.
+- Rokku 2.0.0 doesn't rely on instance variable like `@user` anymore. Instead, a `user` variable must be passed as an argument to a method.
+
+For Hanami 1.3 support, use Rokku 0.7.0.
 
 #### 0.7.0
 

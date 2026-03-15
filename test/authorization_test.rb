@@ -29,7 +29,7 @@ describe 'Authorization' do
     end
 
     it 'authorizes the user' do
-      assert authorized?(@app_name, @resource_name_app, @action_name_app), 'User is authorized'
+      assert authorized?(@user, namespace: @app_name, resource: @resource_name_app, action: @action_name_app), 'User is authorized'
     end
   end
 
@@ -44,7 +44,7 @@ describe 'Authorization' do
     end
 
     it 'authorizes the user' do
-      assert authorized?(@app_name, @resource_name_app, @action_name_app), 'User is authorized'
+      assert authorized?(@user, namespace: @app_name, resource: @resource_name_app, action: @action_name_app), 'User is authorized'
     end
   end
 
@@ -58,7 +58,7 @@ describe 'Authorization' do
     end
 
     it 'doesnt authorize the user' do
-      refute authorized?(@app_name, @resource_name_app, @action_name_app), 'User is not authorized'
+      refute authorized?(@user, namespace: @app_name, resource: @resource_name_app, action: @action_name_app), 'User is not authorized'
     end
   end
 
@@ -73,7 +73,7 @@ describe 'Authorization' do
     end
 
     it 'authorizes the user' do
-      assert authorized?(@app_name_admin, @resource_name_admin, @action_name_admin), 'User is authorized'
+      assert authorized?(@user, namespace: @app_name_admin, resource: @resource_name_admin, action: @action_name_admin), 'User is authorized'
     end
   end
 
@@ -87,7 +87,7 @@ describe 'Authorization' do
     end
 
     it 'doesnt authorize the user' do
-      refute authorized?(@app_name_admin, @resource_name_admin, @action_name_admin), 'User is not authorized'
+      refute authorized?(@user, namespace: @app_name_admin, resource: @resource_name_admin, action: @action_name_admin), 'User is not authorized'
     end
   end
 
@@ -95,6 +95,9 @@ describe 'Authorization' do
     before do
       @new_main_resource = 'Posts'
       @new_slice_resource = 'Books'
+
+      @app_name_1 = 'diving_blog'
+      @new_main_resource_1 = 'blog_posts'
     end
 
     after do
@@ -113,9 +116,19 @@ describe 'Authorization' do
       Dir.chdir('test/Testapp') do
         Commands.generate_policy(@new_main_resource, app_name: @app_name)
         generated_policy_string = "app/policies/#{@new_main_resource.downcase}_policy.rb"
-        assert File.file?("app/policies/#{@new_main_resource.downcase}_policy.rb"), "The file app/policies/#{@new_main_resource.downcase}_policy.rb is generated"
+        assert File.file?("app/policies/#{@new_main_resource.downcase}_policy.rb"), "The file app/policies/posts_policy.rb is generated."
         assert File.readlines(generated_policy_string).grep(/authorized_roles_for_new/).size > 0, 'The file has content authorized_roles_for_new.'
-        assert File.readlines(generated_policy_string).grep(/#{@app_name}/).size > 0, "The file has content #{@app_name}."
+        assert File.readlines(generated_policy_string).grep(/#{@app_name}/).size > 0, "The file has content 'Testapp'."
+      end
+    end
+
+    it 'generates main app policy with resource name with underscores' do
+      Dir.chdir('test/Testapp') do
+        Commands.generate_policy(@new_main_resource_1, app_name: @app_name_1)
+        generated_policy_string = "app/policies/#{@new_main_resource_1.downcase}_policy.rb"
+        assert File.file?("app/policies/#{@new_main_resource_1.downcase}_policy.rb"), "The file app/policies/diving_blog_policy.rb is generated."
+        assert File.readlines(generated_policy_string).grep(/authorized_roles_for_new/).size > 0, 'The file has content authorized_roles_for_new.'
+        assert File.readlines(generated_policy_string).grep(/#{@app_name_1}/).size > 0, "The file has content DivingBlog."
       end
     end
 
@@ -123,9 +136,9 @@ describe 'Authorization' do
       Dir.chdir('test/Testapp') do
         Commands.generate_policy(@new_slice_resource, slice_name: @app_name_admin)
         generated_policy_string = "slices/#{@app_name_admin.downcase}/policies/#{@new_slice_resource.downcase}_policy.rb"
-        assert File.file?("slices/#{@app_name_admin.downcase}/policies/#{@new_slice_resource.downcase}_policy.rb"), "The file slices/#{@app_name_admin.downcase}/policies/#{@new_slice_resource.downcase}_policy.rb is generated"
+        assert File.file?("slices/#{@app_name_admin.downcase}/policies/#{@new_slice_resource.downcase}_policy.rb"), "The file 'slices/admin/policies/books_policy.rb' is generated."
         assert File.readlines(generated_policy_string).grep(/authorized_roles_for_new/).size > 0, 'The file has content authorized_roles_for_new.'
-        assert File.readlines(generated_policy_string).grep(/#{@app_name_admin.downcase.capitalize}/).size > 0, "The file has content #{@app_name_admin.downcase.capitalize}."
+        assert File.readlines(generated_policy_string).grep(/#{@app_name_admin.downcase.capitalize}/).size > 0, "The file has content 'admin'."
       end
     end
   end

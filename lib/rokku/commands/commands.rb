@@ -80,20 +80,23 @@ module Commands
   def self.generate_policy(policy_name, app_name: nil, slice_name: nil)
     if slice_name
       namespace = slice_name.downcase
-      policies_dir = "slices/#{namespace}/policies"
+      folder_namespace = slice_name.split("_").map(&:downcase).join
+      puts folder_namespace
+      policies_dir = "slices/#{folder_namespace}/policies"
     elsif app_name
-      namespace = app_name.downcase.capitalize
+      namespace = app_name.downcase
+      folder_namespace = app_name.split("_").map(&:downcase).join
       policies_dir = "app/policies"
     else
       raise ArgumentError, "Please specify either app_name or slice_name."
     end
 
-    policy_class_name = "#{policy_name.downcase.capitalize}Policy"
+    policy_class_name = "#{policy_name.split("_").map(&:downcase).map(&:capitalize).join}Policy"
 
     policy_content = <<~RUBY
       # frozen_string_literal: true
       
-      module #{namespace.capitalize}
+      module #{namespace}
         class #{policy_class_name}
           def initialize(roles)
             @user_roles = roles
