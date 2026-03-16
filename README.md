@@ -64,18 +64,33 @@ Prior to authorizing the user, retrieve the entity from the database and assign 
 For example, the `user.roles` could either be a simple string like 'admin' or an array of roles like `['level_1', 'level_2', 'level_3']`.
 
 ### 2.2 Policy creation
-Rokku supports policy creation for either the main application or for a specific slice. The first are created in the `app/policies` folder and the latter in the `slices/'slice name'/policies`. See the two command examples below.
+Rokku supports policy creation for either the main application or for a specific slice. Application policies are created in the `app/policies` folder, while the slice policies are created in the `slices/'slice name'/policies`. See the two command examples below.
 
 ```ruby
-rokku -p task -a myapp #=> app/policies/task_policy.rb
+rokku -p tasks -a myapp #=> app/policies/tasks_policy.rb
 ```
 
 ```ruby
-rokku -p task -s admin #=> app/slices/admin/policies/task_policy.rb
+rokku -p tasks -s admin #=> app/slices/admin/policies/tasks_policy.rb
 ```
 
 **The command must be run in the project root folder.**
 
+**Flags:**
+* -p, --policy => policy
+* -s, --slice => slice
+* -a, --app => application
+
+
+#### 2.2.1 Naming requirements
+For multi part names snake case must be used.
+
+```ruby
+rokku -p admin_tasks -s admin_tickets #=> app/slices/admin_tickets/policies/admin_tasks_policy.rb
+```
+
+
+### 2.3 Verifying authorization
 Once the file is generated, the authorized roles variables in the initialize block for required actions need to be uncommented and supplied with specific roles.
 
 For example:
@@ -87,10 +102,83 @@ For example:
 @authorized_roles_for_update = ['admin']
 ```
 
-Then we can check if a user is authorized for the `mightyPoster` application, `Post` controller and `Update`action.
+Then we can check if a user is authorized for the `AdminTickets` slice, `AdminTasks` resources and the `Update`action.
 
 ```ruby
-authorized?("mightyposter", "post", "update")
+authorized?(user)
+```
+
+The `authorized?` method checks if the specified user has the required role and permission to access the action. It returns true or false and provides the basis for further actions in either case.
+
+Rokku supports 2 modes of arguments specification: automatic and manual.
+Automatic fits most cases, since the app or slice name, resource name and action are automatically extracted.
+
+With manual it's possible to do cross-namespace authorization checks and multiple permission checks.
+
+* Automatic
+
+    `authorized?(current_user)`
+    
+* Manual
+
+    `authorized?(current_user, namespace: "ChessBase", resource: "ChessOpenings", action: "destroy")`
+    
+The namespace argument can either be the main application name or s slice name.
+
+## 2.4 Authorization verification in a share code module
+It is possible to enable session handling in a share code module as provided by Hanami.
+To do this, create an authentication module in **app/actions/authentication.rb**.
+The example below shows also how to custom values to replace default values in
+actions.
+
+```ruby
+module ChessBase
+  module Actions
+    module Authorization
+      
+      def self.included(action_class)
+        action_class.class_eval do
+          include Deps["repos.user_repo"]
+          before :check_authorization
+        end
+      end
+
+      private
+
+      def check_authorization(request, response)
+        user_id = request.session[:current_user]
+        user = user_repo.find_by_id(user_id) if user_id
+
+        if authorized?(user) == false
+          response.flash[:failed_notice] = "You tried to visit an URL you are not authorized for."
+          response.redirect_to '/'
+        end
+      end
+    end
+  end
+end
+```
+
+We can then simply include the `Authorization` module in actions, where required.
+
+However, if we include this in the base action class, it will be available in all
+actions and there is no need for separate includes in actions:
+
+```ruby
+#
+#
+module MyApplication
+  class Action < Hanami::Action
+    # Provide `Success` and `Failure` for pattern matching on operation results
+    include Dry::Monads[:result]
+    include Hanami::Rokku
+    include Xpresstube::Actions::Authorization
+
+    handle_exception "ROM::TupleCountMismatchError" => :handle_not_found
+
+    private
+#
+#
 ```
 
 

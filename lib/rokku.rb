@@ -10,14 +10,14 @@ module Hanami
     # provides the basis for further actions in either case.
     #
     # There are 2 modes of arguments specification possible: automatic and manual.
-    # Automatic would fit most cases. With manual it would be possible to do
+    # Automatic fits most cases. With manual it's possible to do
     # cross-namespace authorization checks and multiple permission checks.
 
     # Automatic
-    #   authorized?(user: current_user)
+    #   authorized?(current_user)
     #
     # Manual
-    #   authorized?(user: current_user, namespace: "ChessBase", resource: "EndGames", action: "destroy")
+    #   authorized?(current_user, namespace: "ChessBase", resource: "ChessOpenings", action: "destroy")
     #
     # The namespace argument can either be the main application name or s slice name.
 

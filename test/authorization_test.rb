@@ -135,7 +135,7 @@ describe 'Authorization' do
 
   describe 'policy file creation: multi part namespace' do
     before do
-      @app_name = 'test_app'
+      @app_name = 'chess_base'
       @app_resource_name = 'chess_openings'
       
       @slice_name = 'Chess_admin'
@@ -158,9 +158,10 @@ describe 'Authorization' do
       Dir.chdir('test/Testapp') do
         Commands.generate_policy(@app_resource_name, app_name: @app_name)
         generated_policy_string = "app/policies/#{@app_resource_name.downcase}_policy.rb"
+        
         assert File.file?("app/policies/#{@app_resource_name.downcase}_policy.rb"), "The file app/policies/posts_policy.rb is generated."
         assert File.readlines(generated_policy_string).grep(/authorized_roles_for_new/).size > 0, 'The file has content authorized_roles_for_new.'
-        assert File.readlines(generated_policy_string).grep(/TestApp/).size > 0, "The file has content 'TestApp'."
+        assert File.readlines(generated_policy_string).grep(/ChessBase/).size > 0, "The file has content 'ChessBase'."
       end
     end
 
@@ -168,6 +169,7 @@ describe 'Authorization' do
       Dir.chdir('test/Testapp') do
         Commands.generate_policy(@slice_resource_name, slice_name: @slice_name)
         generated_policy_string = "slices/#{@slice_name.downcase}/policies/#{@slice_resource_name.downcase}_policy.rb"
+        
         assert File.file?("slices/#{@slice_name.downcase}/policies/#{@slice_resource_name.downcase}_policy.rb"), "The file 'slices/admin/policies/books_policy.rb' is generated."
         assert File.readlines(generated_policy_string).grep(/authorized_roles_for_new/).size > 0, 'The file has content authorized_roles_for_new.'
         assert File.readlines(generated_policy_string).grep(/ChessAdmin/).size > 0, "The file has content 'ChessAdmin'."
