@@ -79,13 +79,11 @@ module Commands
 
   def self.generate_policy(policy_name, app_name: nil, slice_name: nil)
     if slice_name
-      namespace = slice_name.downcase
-      folder_namespace = slice_name.split("_").map(&:downcase).join
-      puts folder_namespace
+      namespace = slice_name.split("_").map(&:downcase).map(&:capitalize).join
+      folder_namespace = slice_name.split("_").map(&:downcase).join("_")
       policies_dir = "slices/#{folder_namespace}/policies"
     elsif app_name
-      namespace = app_name.downcase
-      folder_namespace = app_name.split("_").map(&:downcase).join
+      namespace = app_name.split("_").map(&:downcase).map(&:capitalize).join
       policies_dir = "app/policies"
     else
       raise ArgumentError, "Please specify either app_name or slice_name."
@@ -151,7 +149,7 @@ module Commands
     else
       File.write(policy_file, policy_content)
       puts "✓ Generated policy: #{policy_file}."
-      puts "  Namespace: #{namespace.capitalize}::#{policy_class_name}."
+      puts "  Namespace: #{namespace}::#{policy_class_name}."
     end
   end
 end
