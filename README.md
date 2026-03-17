@@ -113,7 +113,8 @@ The `authorized?` method checks if the specified user has the required role and 
 Rokku supports 2 modes of arguments specification: automatic and manual.
 Automatic fits most cases, since the app or slice name, resource name and action are automatically extracted.
 
-With manual it's possible to do cross-namespace authorization checks and multiple permission checks.
+With manual it's possible to do cross-namespace authorization checks and multiple permission checks. For example it's possible to check for authorization for `EndGames` in
+an action for `ChessOpenings`.
 
 * Automatic
 
@@ -124,6 +125,10 @@ With manual it's possible to do cross-namespace authorization checks and multipl
     `authorized?(current_user, namespace: "ChessBase", resource: "ChessOpenings", action: "destroy")`
     
 The namespace argument can either be the main application name or s slice name.
+
+#### 2.2.1 Naming requirements
+For multi part names PascalCase must be used as shown in the above example for **Manual**.
+
 
 ## 2.4 Authorization verification in a share code module
 It is possible to enable session handling in a share code module as provided by Hanami.
