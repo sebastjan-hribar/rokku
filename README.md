@@ -186,6 +186,18 @@ module MyApplication
 #
 ```
 
+**_Disabling the authorization shared module in specific actions_**
+
+Sometimes we might not want to check for authorized user. For example,
+doing so in the `login` action will cause an infinite loop. There we can
+disable the module by overwriting the desired methods in the action:
+
+```ruby
+private
+
+def check_authorization; end
+```
+
 
 ### Changelog
 
